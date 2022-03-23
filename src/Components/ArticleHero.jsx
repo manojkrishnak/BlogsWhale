@@ -1,19 +1,9 @@
 import { Link } from "react-router-dom";
+import {formatDate} from "../utils/utils";
 
 function ArticleHero(props) {
   console.log(props);
 
-  function formatDate(createdDate) {
-    const options = {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-    return new Date(createdDate)
-      .toLocaleDateString("en-US", options)
-      .replaceAll(",", "");
-  }
 
   return (
     <div className="each-article-hero flex col justify-bt">

@@ -1,9 +1,6 @@
 function Paginate({ totalArticles, postsPerPage, paginate, currentPage }) {
   const pageNumbers = [];
   const numPages = Math.ceil(totalArticles / postsPerPage);
-  //   for (let i = 1; i <= Math.ceil(totalArticles / postsPerPage); i++) {
-  //     pageNumbers.push(i);
-  //   }
   for (let i = 1; i <= numPages; i++) {
     if (
       i <= 5 || //the first five pages
@@ -14,9 +11,13 @@ function Paginate({ totalArticles, postsPerPage, paginate, currentPage }) {
   }
 
   return (
-    <ul className="flex">
+    <ul className="flex justify-ct pagination">
       {pageNumbers.map((pageNumber) => (
-        <li className="page-number-box" key={pageNumber} onClick={() => paginate(pageNumber)}>
+        <li
+          className={currentPage === pageNumber ? "page-number-box active-page": "page-number-box"}
+          key={pageNumber}
+          onClick={() => paginate(pageNumber)}
+        >
           {pageNumber}
         </li>
       ))}

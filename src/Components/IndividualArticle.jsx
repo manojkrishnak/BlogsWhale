@@ -1,19 +1,17 @@
-import { useEffect, useState } from "react";
-import Header from "./Header";
+import { useEffect, useState, Fragment } from "react";
 import ArticleHero from "./ArticleHero";
 import Loader from "./Loader";
 import Footer from "./Footer";
 import { useParams } from "react-router-dom";
+import { articlesURL } from "../utils/constant";
 
 function IndividualArticle() {
   const [article, setArticle] = useState(null);
   const { slug } = useParams();
   console.log(slug)
-  const url = "https://mighty-oasis-08080.herokuapp.com";
-  console.log(slug);
 
   useEffect(() => {
-    fetch(`${url}/api/articles/${slug}`)
+    fetch(`${articlesURL}/${slug}`)
       .then((res) => res.json())
       .then((data) => setArticle(data.article))
       .catch((err) => console.log(`${err} at Individual Article`));
@@ -23,9 +21,8 @@ function IndividualArticle() {
 
   return (
     <div>
-      <Header />
       {article ? (
-        <>
+        <Fragment>
           <ArticleHero article={{ ...article }} />
           <div className="container each-article-content">
             <p className="">{article.body}</p>
@@ -39,7 +36,7 @@ function IndividualArticle() {
             <hr />
             <Footer />
           </div>
-        </>
+        </Fragment>
       ) : (
         <Loader />
       )}

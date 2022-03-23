@@ -1,18 +1,9 @@
 import { Link } from "react-router-dom";
+import {formatDate} from "../utils/utils";
 
-function ArticleInFeed(props) {
+
+function Post(props) {
   console.log(props);
-  function formatDate(createdDate) {
-    const options = {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-    return new Date(createdDate)
-      .toLocaleDateString("en-US", options)
-      .replaceAll(",", "");
-  }
 
   return (
     <article className="article-feed">
@@ -20,7 +11,7 @@ function ArticleInFeed(props) {
         <div className="flex align-ct">
           <figure className="user-img">
             <img
-              src={props.article.author.image}
+              src={props.article.author.image || "/images/smiley.jpg"}
               alt={props.article.author.username + "_img"}
             />
           </figure>
@@ -47,7 +38,7 @@ function ArticleInFeed(props) {
         <Link
           className="article-feed-title"
           to={{
-            pathname: `/articles/${props.article.slug}`,
+            pathname: `/article/${props.article.slug}`,
             slug: props.article.slug,
           }}
         >
@@ -59,7 +50,7 @@ function ArticleInFeed(props) {
         <Link
           className="read-btn"
           to={{
-            pathname: `/articles/${props.article.slug}`,
+            pathname: `/article/${props.article.slug}`,
             slug: props.article.slug,
           }}
         >
@@ -81,4 +72,4 @@ function ArticleInFeed(props) {
   );
 }
 
-export default ArticleInFeed;
+export default Post;

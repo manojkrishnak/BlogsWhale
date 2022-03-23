@@ -1,26 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import Signin from "./Components/Signin";
-import Signup from "./Components/Signup";
-import IndividualArticle from "./Components/IndividualArticle";
+import Header from "./components/Header";
+import Signin from "./components/Signin";
+import Signup from "./components/Signup";
+import NoMatch from "./components/NoMatch";
+import IndividualArticle from "./components/IndividualArticle";
 
 ReactDOM.render(
   <BrowserRouter>
-    <Route exact path="/">
-      <App />
-    </Route>
-    <Route path="/signin">
-      <Signin />
-    </Route>
-    <Route path="/signup">
-    <Signup />
-    </Route>
-    <Route path="/article/:slug">
-    <IndividualArticle />
-    </Route>
+      <Header />
+    <Switch>      
+      <Route exact path="/">
+        <App />
+      </Route>
+      <Route path="/signin">
+        <Signin />
+      </Route>
+      <Route path="/signup">
+        <Signup />
+      </Route>
+      <Route path="/article/:slug">
+        <IndividualArticle />
+      </Route>
+      <Route path="*">
+        <NoMatch />
+        </Route>
+    </Switch>
   </BrowserRouter>,
   document.getElementById("root")
 );
