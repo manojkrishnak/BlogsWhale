@@ -5,8 +5,8 @@ import Posts from "./components/Posts";
 import Paginate from "./components/Paginate";
 import FeedNav from "./components/FeedNav";
 import { articlesURL } from "./utils/constant";
-
 import "./styles/App.css";
+import { getItemFromLocalStorage } from "./utils/utils";
 
 function App() {
   const [articles, setArticles] = useState(null);
@@ -16,6 +16,7 @@ function App() {
   const [offset, setOffset] = useState(0);
   const [error, setError] = useState(null);
   const [addTab, setAddTab] = useState("");
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     fetch(
@@ -32,6 +33,7 @@ function App() {
         setTotalArticles(data.articlesCount);
       })
       .catch((err) => setError("posts " + err));
+    setToken(getItemFromLocalStorage("token"));
   }, [currentPage, addTab]);
 
   function paginate(pageNumber) {
@@ -47,20 +49,10 @@ function App() {
     setAddTab("");
   }
 
-  // function updateTagFilteredArticles(articles) {
-  //   console.log(articles);
-  //   setArticles(articles);
-  // }
-  /* 
-1. Hero
-2. Posts
-3. Tags(sidebar)
-4. Paginate
-*/
   return (
     <main>
       <Hero />
-      <FeedNav removeTab={removeTabHandler} tabName={addTab}/>
+      <FeedNav removeTab={removeTabHandler} tabName={addTab} />
       <div className="container content flex justify-bt align-st">
         <Posts articles={articles} error={error} />
         <Tags addTabInFeed={addTabHandler} />

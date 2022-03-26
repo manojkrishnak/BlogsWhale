@@ -3,6 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import { signinURL } from "../utils/constant";
 import validate from "../utils/validate";
 import Loader from "./Loader";
+import {setItemToLocalStorage} from "../utils/utils";
 
 function Signin() {
   let history = useHistory();
@@ -54,6 +55,8 @@ function Signin() {
           setLoading(false);
         } else {
           setLoading(false);
+          console.log(data)
+          setItemToLocalStorage(data.user.token)
           history.push("/");
         }
       })

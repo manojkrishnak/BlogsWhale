@@ -7,7 +7,9 @@ import Header from "./components/Header";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import NoMatch from "./components/NoMatch";
+import PrivateHomePage from "./components/PrivateHomePage";
 import IndividualArticle from "./components/IndividualArticle";
+
 
 ReactDOM.render(
   <BrowserRouter>
@@ -25,9 +27,12 @@ ReactDOM.render(
       <Route path="/article/:slug">
         <IndividualArticle />
       </Route>
+      <Route path="/private">
+        <PrivateHomePage />
+      </Route>
       <Route path="*">
         <NoMatch />
-        </Route>
+      </Route>
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")
