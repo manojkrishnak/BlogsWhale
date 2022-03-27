@@ -45,9 +45,11 @@ function App() {
   return (
     <BrowserRouter>
       <Header isAuthenticated={isAuthenticated} />
-      {
-        isAuthenticated ? <AuthenticatedRoutes /> : <UnauthenticatedRoutes updateUser={updateUser}/>
-      }
+      {isAuthenticated ? (
+        <AuthenticatedRoutes />
+      ) : (
+        <UnauthenticatedRoutes updateUser={updateUser} />
+      )}
     </BrowserRouter>
   );
 }
