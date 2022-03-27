@@ -215,6 +215,10 @@ a {
   color: #fff;
 }
 
+.icon{
+  margin-right: 0.3rem;
+}
+
 .signin-btn:disabled, .signin-btn[disabled], .signup-btn:disabled, .signup-btn[disabled]{
   background-color: rgb(199, 199, 199);
   color: gray;

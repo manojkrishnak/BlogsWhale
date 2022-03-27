@@ -11,8 +11,8 @@ export function formatDate(createdDate) {
 }
 
 
-export function setItemToLocalStorage(token){
-  return window.localStorage.setItem("token", token);
+export function setItemToLocalStorage(key, token){
+  return window.localStorage.setItem(key, token);
 }
 
 export function getItemFromLocalStorage(key){

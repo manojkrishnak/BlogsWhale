@@ -1,69 +1,95 @@
 import { useEffect, useState } from "react";
-import Hero from "./components/Hero";
-import Tags from "./components/Tags";
-import Posts from "./components/Posts";
-import Paginate from "./components/Paginate";
-import FeedNav from "./components/FeedNav";
-import { articlesURL } from "./utils/constant";
-import "./styles/App.css";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Header from "./components/Header";
+import Signin from "./components/Signin";
+import Signup from "./components/Signup";
+import NoMatch from "./components/NoMatch";
+import PrivateHomePage from "./components/PrivateHomePage";
+import IndividualArticle from "./components/IndividualArticle";
+import HomePage from "./components/HomePage";
 import { getItemFromLocalStorage } from "./utils/utils";
+import { localStorageKey, verifyUserURL } from "./utils/constant";
+import FullPageLoader from "./components/FullPageLoader";
 
 function App() {
-  const [articles, setArticles] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10);
-  const [totalArticles, setTotalArticles] = useState(0);
-  const [offset, setOffset] = useState(0);
-  const [error, setError] = useState(null);
-  const [addTab, setAddTab] = useState("");
-  const [token, setToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const [isVerifying, setIsVerifying] = useState(true);
 
   useEffect(() => {
-    fetch(
-      `${articlesURL}?limit=10&offset=${offset}` + (addTab && "&tag=" + addTab)
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.statusText);
-        }
-        return res.json();
+    const authToken = getItemFromLocalStorage(localStorageKey);
+    if (authToken) {
+      fetch(verifyUserURL, {
+        method: "GET",
+        headers: {
+          authorization: `Token ${authToken}`,
+        },
       })
-      .then((data) => {
-        setArticles(data.articles);
-        setTotalArticles(data.articlesCount);
-      })
-      .catch((err) => setError("posts " + err));
-    setToken(getItemFromLocalStorage("token"));
-  }, [currentPage, addTab]);
+        .then((res) => res.json())
+        .then(({ user }) => updateUser(true, { user }));
+    } else {
+      setIsVerifying(false);
+    }
+  }, []);
 
-  function paginate(pageNumber) {
-    setCurrentPage(pageNumber);
-    setOffset((pageNumber - 1) * postsPerPage);
+  function updateUser(status, user) {
+    setIsAuthenticated(true);
+    setUser(user);
+    setIsVerifying(false);
   }
 
-  function addTabHandler(name) {
-    setAddTab(name);
-  }
-
-  function removeTabHandler() {
-    setAddTab("");
+  if (isVerifying) {
+    return <FullPageLoader />;
   }
 
   return (
-    <main>
-      <Hero />
-      <FeedNav removeTab={removeTabHandler} tabName={addTab} />
-      <div className="container content flex justify-bt align-st">
-        <Posts articles={articles} error={error} />
-        <Tags addTabInFeed={addTabHandler} />
-      </div>
-      <Paginate
-        totalArticles={totalArticles}
-        postsPerPage={postsPerPage}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
-    </main>
+    <BrowserRouter>
+      <Header isAuthenticated={isAuthenticated} />
+      {
+        isAuthenticated ? <AuthenticatedRoutes /> : <UnauthenticatedRoutes updateUser={updateUser}/>
+      }
+    </BrowserRouter>
+  );
+}
+
+function AuthenticatedRoutes(props) {
+  return (
+    <Switch>
+      <Route exact path="/">
+        <HomePage />
+      </Route>
+      <Route path="/article/:slug">
+        <IndividualArticle />
+      </Route>
+      <Route path="/private">
+        <PrivateHomePage />
+      </Route>
+      <Route path="*">
+        <NoMatch />
+      </Route>
+    </Switch>
+  );
+}
+
+function UnauthenticatedRoutes(props) {
+  return (
+    <Switch>
+      <Route exact path="/">
+        <HomePage />
+      </Route>
+      <Route path="/signin">
+        <Signin updateUser={props.updateUser} />
+      </Route>
+      <Route path="/signup">
+        <Signup updateUser={props.updateUser} />
+      </Route>
+      <Route path="/article/:slug">
+        <IndividualArticle />
+      </Route>
+      <Route path="*">
+        <NoMatch />
+      </Route>
+    </Switch>
   );
 }
 

@@ -4,8 +4,9 @@ import { signinURL } from "../utils/constant";
 import validate from "../utils/validate";
 import Loader from "./Loader";
 import {setItemToLocalStorage} from "../utils/utils";
+import {localStorageKey} from "../utils/constant";
 
-function Signin() {
+function Signin(props) {
   let history = useHistory();
   const [userDetails, setUserDetails] = useState({
     email: "",
@@ -56,7 +57,8 @@ function Signin() {
         } else {
           setLoading(false);
           console.log(data)
-          setItemToLocalStorage(data.user.token)
+          setItemToLocalStorage(localStorageKey, data.user.token);
+          props.updateUser(true, data.user);
           history.push("/");
         }
       })
